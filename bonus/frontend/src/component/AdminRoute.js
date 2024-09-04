@@ -8,4 +8,4 @@ const AdminRoute = ({ children }) => {
     return userInfo && userInfo.role === 1 ? children : <Navigate to="/" />;
 }
 
-export default AdminRoute
+export default AdminRoute;

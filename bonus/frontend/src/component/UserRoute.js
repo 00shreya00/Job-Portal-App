@@ -8,4 +8,4 @@ const UserRoute = ({ children }) => {
     return userInfo ? children : <Navigate to="/" />;
 }
 
-export default UserRoute
+export default UserRoute;

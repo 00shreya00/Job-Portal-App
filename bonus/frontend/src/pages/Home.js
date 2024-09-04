@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import Navbar from '../component/Navbar'
-import Header from '../component/Header'
-import { Box, Card, Container, ListItemIcon, MenuItem, MenuList, Pagination, Stack, Typography, useTheme } from '@mui/material'
-import { useDispatch, useSelector } from 'react-redux'
-import { jobLoadAction } from '../redux/actions/jobAction'
-import { Link, useParams } from 'react-router-dom'
-import CardElement from '../component/CardElement'
-import Footer from '../component/Footer'
-import LoadingBox from '../component/LoadingBox'
-import SelectComponent from '../component/SelectComponent'
-import { jobTypeLoadAction } from '../redux/actions/jobTypeAction'
+import React, { useEffect, useState } from 'react';
+import Navbar from '../component/Navbar';
+import Header from '../component/Header';
+import { Box, Card, Container, ListItemIcon, MenuItem, MenuList, Pagination, Stack, Typography, useTheme, Select, MenuItem as MuiMenuItem } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { jobLoadAction } from '../redux/actions/jobAction';
+import { Link, useParams } from 'react-router-dom';
+import JobCard from '../component/jobCard'; // Correct case for the file name
+
+import Footer from '../component/Footer';
+import LoadingBox from '../component/LoadingBox';
+import { jobTypeLoadAction } from '../redux/actions/jobTypeAction';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-
-
 
 const Home = () => {
     const { jobs, setUniqueLocation, pages, loading } = useSelector(state => state.loadJobs);
@@ -39,7 +37,6 @@ const Home = () => {
     return (
         <>
             <Box sx={{ bgcolor: "#fafafa", minHeight: "100vh" }}>
-
                 <Navbar />
                 <Header />
                 <Container>
@@ -54,32 +51,65 @@ const Home = () => {
                                         Filter job by category
                                     </Typography>
                                 </Box>
-                                <SelectComponent handleChangeCategory={handleChangeCategory} cat={cat} />
-
+                                <Select
+                                    value={cat}
+                                    onChange={handleChangeCategory}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Category' }}
+                                    fullWidth
+                                >
+                                    <MuiMenuItem value="" disabled>Select Category</MuiMenuItem>
+                                    <MuiMenuItem value="frontend">Frontend</MuiMenuItem>
+                                    <MuiMenuItem value="backend">Backend</MuiMenuItem>
+                                    <MuiMenuItem value="devops">DevOps</MuiMenuItem>
+                                    {/* Add other categories dynamically if needed */}
+                                </Select>
                             </Card>
 
                             {/* jobs by location */}
                             <Card sx={{ minWidth: 150, mb: 3, mt: 3, p: 2, bgcolor: palette.primary.white }}>
                                 <Box sx={{ pb: 2 }}>
-                                    {/* <h4>Filter by category</h4> */}
                                     <Typography component="h4" sx={{ color: palette.secondary.main, fontWeight: 600 }}>
                                         Filter job by location
                                     </Typography>
                                     <MenuList>
-                                        {
-                                            setUniqueLocation && setUniqueLocation.map((location, i) => (
-                                                <MenuItem key={i}>
-                                                    <ListItemIcon>
-                                                        <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
-                                                    </ListItemIcon>
-                                                    <Link style={{ color: palette.secondary.main }} to={`/search/location/${location}`}>{location}</Link>
-                                                </MenuItem>
-
-                                            ))
-                                        }
-
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/new-york`}>New York</Link>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/florida`}>Florida</Link>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/california`}>California</Link>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/new-jersey`}>New Jersey</Link>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/washington`}>Washington</Link>
+                                        </MenuItem>
+                                        <MenuItem>
+                                            <ListItemIcon>
+                                                <LocationOnIcon sx={{ color: palette.secondary.main, fontSize: 18 }} />
+                                            </ListItemIcon>
+                                            <Link style={{ color: palette.secondary.main, textDecoration: 'underline' }} to={`/search/location/remote`}>Remote</Link>
+                                        </MenuItem>
                                     </MenuList>
-
                                 </Box>
                             </Card>
                         </Box>
@@ -88,32 +118,23 @@ const Home = () => {
                                 loading ?
                                     <LoadingBox /> :
                                     jobs && jobs.length === 0 ?
-                                        <>
-                                            <Box
-                                                sx={{
-                                                    minHeight: '350px',
-                                                    display: 'flex',
-                                                    justifyContent: 'center',
-                                                    alignItems: 'center'
-                                                }}>
-
-                                                <h2>No result found!</h2>
-                                            </Box>
-                                        </> :
-
-
+                                        <Box
+                                            sx={{
+                                                minHeight: '350px',
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center'
+                                            }}>
+                                            <h2>No result found!</h2>
+                                        </Box> :
                                         jobs && jobs.map((job, i) => (
-                                            <CardElement
+                                            <JobCard
                                                 key={i}
-                                                id={job._id}
-                                                jobTitle={job.title}
-                                                description={job.description}
-                                                category={job.jobType ? job.jobType.jobTypeName : "No category"}
-                                                location={job.location}
+                                                job={job}
                                             />
                                         ))
                             }
-                            <Stack spacing={2} >
+                            <Stack spacing={2}>
                                 <Pagination color="primary" variant="outlined" page={page} count={pages === 0 ? 1 : pages} onChange={(event, value) => setPage(value)} />
                             </Stack>
                         </Box>
@@ -121,9 +142,8 @@ const Home = () => {
                 </Container>
             </Box>
             <Footer />
-
         </>
     )
 }
 
-export default Home
+export default Home;
